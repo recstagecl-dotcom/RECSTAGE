@@ -17,6 +17,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
+import ImageUploader from "../ImageUploader";
 
 interface Props {
   proposal: Proposal;
@@ -78,16 +79,12 @@ function SortableCard({
             className="w-full bg-neutral-800 border border-neutral-600 rounded-lg px-3 py-2 text-sm text-white focus:border-[#E50914] focus:outline-none"
           />
         </div>
-        <div>
-          <label className="text-xs text-neutral-600 mb-1 block">Imagen URL</label>
-          <input
-            type="text"
-            value={card.image}
-            onChange={(e) => onUpdateCard(index, "image", e.target.value)}
-            className="w-full bg-neutral-800 border border-neutral-600 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-[#E50914] focus:outline-none"
-          />
-        </div>
       </div>
+      <ImageUploader
+        value={card.image}
+        onChange={(url) => onUpdateCard(index, "image", url)}
+        label="Imagen de la tarjeta"
+      />
       <div>
         <label className="text-xs text-neutral-600 mb-1 block">Título</label>
         <input

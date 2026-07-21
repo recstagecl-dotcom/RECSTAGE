@@ -1,6 +1,7 @@
 "use client";
 
 import { Proposal } from "@/lib/types";
+import ImageUploader from "../ImageUploader";
 
 interface Props {
   proposal: Proposal;
@@ -78,16 +79,11 @@ export default function InfoEditor({ proposal, onUpdate }: Props) {
           placeholder="Información adicional del evento"
         />
       </div>
-      <div>
-        <label className="text-xs text-neutral-500 mb-1.5 block">URL del Flyer</label>
-        <input
-          type="text"
-          value={info.flyer}
-          onChange={(e) => update("flyer", e.target.value)}
-          className="w-full bg-neutral-900 border border-neutral-700 rounded-lg px-4 py-2.5 text-sm text-white font-mono focus:border-[#E50914] focus:outline-none"
-          placeholder="/images/flyer.jpg"
-        />
-      </div>
+      <ImageUploader
+        value={info.flyer}
+        onChange={(url) => update("flyer", url)}
+        label="Flyer del evento"
+      />
     </div>
   );
 }

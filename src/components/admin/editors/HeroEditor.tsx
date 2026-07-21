@@ -1,6 +1,7 @@
 "use client";
 
 import { Proposal } from "@/lib/types";
+import ImageUploader from "../ImageUploader";
 
 interface Props {
   proposal: Proposal;
@@ -61,7 +62,7 @@ export default function HeroEditor({ proposal, onUpdate }: Props) {
         />
       </div>
       <div>
-        <label className="text-xs text-neutral-500 mb-1.5 block">Video de fondo (MP4)</label>
+        <label className="text-xs text-neutral-500 mb-1.5 block">Video de fondo (URL o ruta)</label>
         <input
           type="text"
           value={proposal.hero.backgroundVideo}
@@ -69,23 +70,14 @@ export default function HeroEditor({ proposal, onUpdate }: Props) {
             onUpdate({ hero: { ...proposal.hero, backgroundVideo: e.target.value } })
           }
           className="w-full bg-neutral-900 border border-neutral-700 rounded-lg px-4 py-2.5 text-sm text-white font-mono focus:border-[#E50914] focus:outline-none"
-          placeholder="/video.mp4"
+          placeholder="https://... o /video.mp4"
         />
       </div>
-      <div>
-        <label className="text-xs text-neutral-500 mb-1.5 block">
-          Imagen de fallback
-        </label>
-        <input
-          type="text"
-          value={proposal.hero.backgroundImage}
-          onChange={(e) =>
-            onUpdate({ hero: { ...proposal.hero, backgroundImage: e.target.value } })
-          }
-          className="w-full bg-neutral-900 border border-neutral-700 rounded-lg px-4 py-2.5 text-sm text-white font-mono focus:border-[#E50914] focus:outline-none"
-          placeholder="/images/hero-bg.jpg"
-        />
-      </div>
+      <ImageUploader
+        value={proposal.hero.backgroundImage}
+        onChange={(url) => onUpdate({ hero: { ...proposal.hero, backgroundImage: url } })}
+        label="Imagen de fallback"
+      />
     </div>
   );
 }

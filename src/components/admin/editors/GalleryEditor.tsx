@@ -1,6 +1,7 @@
 "use client";
 
 import { Proposal } from "@/lib/types";
+import ImageUploader from "../ImageUploader";
 
 interface Props {
   proposal: Proposal;
@@ -31,7 +32,7 @@ export default function GalleryEditor({ proposal, onUpdate }: Props) {
       {proposal.gallery.length === 0 && (
         <p className="text-sm text-neutral-600">No hay imágenes agregadas</p>
       )}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="space-y-3">
         {proposal.gallery.map((image, index) => (
           <div
             key={index}
@@ -46,12 +47,9 @@ export default function GalleryEditor({ proposal, onUpdate }: Props) {
                 ✕
               </button>
             </div>
-            <input
-              type="text"
+            <ImageUploader
               value={image.url}
-              onChange={(e) => updateImage(index, "url", e.target.value)}
-              className="w-full bg-neutral-800 border border-neutral-600 rounded px-2 py-1.5 text-xs text-white font-mono focus:border-[#E50914] focus:outline-none"
-              placeholder="/images/foto.jpg"
+              onChange={(url) => updateImage(index, "url", url)}
             />
             <input
               type="text"
