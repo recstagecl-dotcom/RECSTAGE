@@ -70,25 +70,22 @@ export function useProposals() {
   }, []);
 
   const duplicateProposal = useCallback(async (id: string) => {
-    let newCode = "";
-    setProposals((prev) => {
-      const original = prev.find((p) => p.id === id);
-      if (!original) return prev;
-      newCode = generateCode();
-      const duplicate: Proposal = {
-        ...JSON.parse(JSON.stringify(original)),
-        id: String(Date.now()),
-        code: newCode,
-        internalName: `${original.internalName} (Copia)`,
-        visible: false,
-      };
-      supabase()
-        .from("proposals")
-        .upsert({ code: duplicate.code, data: duplicate }, { onConflict: "code" });
-      return [...prev, duplicate];
-    });
+    const original = proposals.find((p) => p.id === id);
+    if (!original) return "";
+    const newCode = generateCode();
+    const duplicate: Proposal = {
+      ...JSON.parse(JSON.stringify(original)),
+      id: String(Date.now()),
+      code: newCode,
+      internalName: `${original.internalName} (Copia)`,
+      visible: false,
+    };
+    setProposals((prev) => [...prev, duplicate]);
+    await supabase()
+      .from("proposals")
+      .upsert({ code: duplicate.code, data: duplicate }, { onConflict: "code" });
     return newCode;
-  }, []);
+  }, [proposals]);
 
   return {
     proposals,
