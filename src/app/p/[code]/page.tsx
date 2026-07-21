@@ -4,11 +4,17 @@ import ProposalRenderer from "@/components/proposal/ProposalRenderer";
 import { Proposal } from "@/lib/types";
 import { getAllProposals } from "@/lib/proposals";
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   params: Promise<{ code: string }>;
 }
 
 async function getProposalByCode(code: string): Promise<Proposal | null> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) return null;
+
   const supabase = getSupabase();
 
   const { data, error } = await supabase
@@ -19,29 +25,14 @@ async function getProposalByCode(code: string): Promise<Proposal | null> {
 
   if (data) return data.data as Proposal;
 
-  if (error) {
-    console.log("Supabase query error:", error.message, error.code);
-  }
-
   const { count } = await supabase
     .from("proposals")
     .select("code", { count: "exact", head: true });
 
-  console.log("Table count:", count);
-
   if (!count || count === 0) {
-    console.log("Seeding default proposals...");
     const defaults = getAllProposals();
     const rows = defaults.map((p) => ({ code: p.code, data: p }));
-    const { error: seedError } = await supabase
-      .from("proposals")
-      .upsert(rows, { onConflict: "code" });
-
-    if (seedError) {
-      console.log("Seed error:", seedError.message);
-    } else {
-      console.log("Seeded", rows.length, "proposals");
-    }
+    await supabase.from("proposals").upsert(rows, { onConflict: "code" });
 
     const retry = await supabase
       .from("proposals")
