@@ -7,6 +7,7 @@ import { Proposal, BlockType } from "@/lib/types";
 import BlockTogglePanel from "@/components/admin/BlockTogglePanel";
 import BlockEditor from "@/components/admin/BlockEditor";
 import ProposalPreview from "@/components/admin/ProposalPreview";
+import PasswordGate from "@/components/admin/PasswordGate";
 
 export default function AdminEditor() {
   const params = useParams();
@@ -66,6 +67,7 @@ export default function AdminEditor() {
   }
 
   return (
+    <PasswordGate>
     <div className="min-h-screen bg-black text-white flex flex-col">
       {/* Top bar */}
       <header className="border-b border-neutral-800 px-6 py-3 flex items-center justify-between bg-neutral-950 sticky top-0 z-50">
@@ -288,5 +290,6 @@ export default function AdminEditor() {
         )}
       </div>
     </div>
+    </PasswordGate>
   );
 }
