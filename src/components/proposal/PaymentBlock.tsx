@@ -16,11 +16,17 @@ export default function PaymentBlock({ data, primaryColor }: Props) {
           </span>
         </div>
         <h2
-          className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-16"
+          className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-6"
           style={{ color: primaryColor }}
         >
-          Formas de Pago
+          {data.subtitle || "Formas de Pago"}
         </h2>
+        {data.description && (
+          <p className="text-neutral-400 text-lg font-light mb-16 leading-relaxed max-w-2xl">
+            {data.description}
+          </p>
+        )}
+        {!data.description && <div className="mb-16" />}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
           {data.methods.map((method, index) => (
             <div
@@ -50,9 +56,11 @@ export default function PaymentBlock({ data, primaryColor }: Props) {
             </div>
           ))}
         </div>
-        <p className="text-center text-neutral-500 text-sm font-light leading-relaxed">
-          {data.notes}
-        </p>
+        {data.notes && (
+          <p className="text-center text-neutral-500 text-sm font-light leading-relaxed">
+            {data.notes}
+          </p>
+        )}
       </div>
     </section>
   );

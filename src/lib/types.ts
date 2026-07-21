@@ -80,13 +80,15 @@ export interface PriceBlock {
 }
 
 export interface PaymentBlock {
+  subtitle: string;
+  description: string;
   methods: string[];
   notes: string;
 }
 
 export interface ContactBlock {
   email: string;
-  phone: string;
+  instagram: string;
   whatsapp: string;
 }
 

@@ -38,6 +38,38 @@ export default function PaymentEditor({ proposal, onUpdate }: Props) {
     <div className="space-y-4">
       <div>
         <label className="text-xs text-neutral-500 mb-1.5 block">
+          Subtítulo
+        </label>
+        <input
+          type="text"
+          value={proposal.payment.subtitle}
+          onChange={(e) =>
+            onUpdate({
+              payment: { ...proposal.payment, subtitle: e.target.value },
+            })
+          }
+          className="w-full bg-neutral-900 border border-neutral-700 rounded-lg px-4 py-2.5 text-sm text-white focus:border-[#E50914] focus:outline-none"
+          placeholder="Formas de Pago"
+        />
+      </div>
+      <div>
+        <label className="text-xs text-neutral-500 mb-1.5 block">
+          Descripción
+        </label>
+        <textarea
+          value={proposal.payment.description}
+          onChange={(e) =>
+            onUpdate({
+              payment: { ...proposal.payment, description: e.target.value },
+            })
+          }
+          rows={3}
+          className="w-full bg-neutral-900 border border-neutral-700 rounded-lg px-4 py-2.5 text-sm text-white focus:border-[#E50914] focus:outline-none resize-none"
+          placeholder="Información adicional sobre los métodos de pago"
+        />
+      </div>
+      <div>
+        <label className="text-xs text-neutral-500 mb-1.5 block">
           Métodos de pago
         </label>
         <div className="space-y-2">
@@ -68,7 +100,7 @@ export default function PaymentEditor({ proposal, onUpdate }: Props) {
       </div>
       <div>
         <label className="text-xs text-neutral-500 mb-1.5 block">
-          Notas de pago
+          Notas
         </label>
         <textarea
           value={proposal.payment.notes}

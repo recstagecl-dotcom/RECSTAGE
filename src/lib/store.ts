@@ -179,12 +179,14 @@ export function generateNewProposal(): Proposal {
       description: "Descripción del plan",
     },
     payment: {
+      subtitle: "Formas de Pago",
+      description: "",
       methods: ["Transferencia bancaria"],
       notes: "Condiciones de pago",
     },
     contact: {
       email: "",
-      phone: "",
+      instagram: "",
       whatsapp: "",
     },
     design: {

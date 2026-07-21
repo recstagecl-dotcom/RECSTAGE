@@ -130,12 +130,14 @@ const proposals: Proposal[] = [
       description: "Producción escénica completa para teloneo",
     },
     payment: {
+      subtitle: "Formas de Pago",
+      description: "Trabajamos con diferentes opciones para que elijas la que mejor se adapte a ti.",
       methods: ["Transferencia bancaria", "Depósito", "QR"],
       notes: "50% de reserva para confirmar fecha. Saldo 7 días antes del evento.",
     },
     contact: {
       email: "contacto@recstage.cl",
-      phone: "+56 9 1234 5678",
+      instagram: "@recstage",
       whatsapp: "+56 9 1234 5678",
     },
     design: {
@@ -273,12 +275,14 @@ const proposals: Proposal[] = [
       description: "Producción integral para festival — incluye escenario, sonido, luces y staff",
     },
     payment: {
+      subtitle: "Condiciones de Pago",
+      description: "Para eventos grandes ofrecemos planes de pago flexibles.",
       methods: ["Transferencia bancaria", "Depósito"],
       notes: "30% de reserva. 40% a 30 días del evento. 30% el día del festival.",
     },
     contact: {
       email: "contacto@recstage.cl",
-      phone: "+56 9 1234 5678",
+      instagram: "@recstage",
       whatsapp: "+56 9 1234 5678",
     },
     design: {
