@@ -1,68 +1,29 @@
-import { notFound } from "next/navigation";
-import { getSupabase } from "@/lib/supabase";
+"use client";
+
+import { useParams } from "next/navigation";
+import { useProposals } from "@/lib/store";
 import ProposalRenderer from "@/components/proposal/ProposalRenderer";
-import { Proposal } from "@/lib/types";
-import { getAllProposals } from "@/lib/proposals";
+import { useEffect, useState } from "react";
 
-export const dynamic = "force-dynamic";
+export default function ProposalPage() {
+  const params = useParams();
+  const code = params.code as string;
+  const { getProposal, loaded } = useProposals();
+  const [mounted, setMounted] = useState(false);
 
-interface Props {
-  params: Promise<{ code: string }>;
-}
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-async function getProposalByCode(code: string): Promise<Proposal | null> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) return null;
+  const proposal = mounted ? getProposal(code) : null;
 
-  const supabase = getSupabase();
-
-  const { data, error } = await supabase
-    .from("proposals")
-    .select("data")
-    .eq("code", code)
-    .single();
-
-  if (data) return data.data as Proposal;
-
-  const { count } = await supabase
-    .from("proposals")
-    .select("code", { count: "exact", head: true });
-
-  if (!count || count === 0) {
-    const defaults = getAllProposals();
-    const rows = defaults.map((p) => ({ code: p.code, data: p }));
-    await supabase.from("proposals").upsert(rows, { onConflict: "code" });
-
-    const retry = await supabase
-      .from("proposals")
-      .select("data")
-      .eq("code", code)
-      .single();
-
-    if (retry.data) return retry.data.data as Proposal;
+  if (!mounted || !loaded || !proposal) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <p className="text-neutral-500">Cargando...</p>
+      </div>
+    );
   }
-
-  return null;
-}
-
-export async function generateMetadata({ params }: Props) {
-  const { code } = await params;
-  const proposal = await getProposalByCode(code);
-
-  if (!proposal) return { title: "Propuesta no encontrada" };
-
-  return {
-    title: `${proposal.internalName} — REC STAGE`,
-    description: `Propuesta comercial para ${proposal.client} — ${proposal.event}`,
-  };
-}
-
-export default async function ProposalPage({ params }: Props) {
-  const { code } = await params;
-  const proposal = await getProposalByCode(code);
-
-  if (!proposal) notFound();
 
   if (!proposal.visible) {
     return (
