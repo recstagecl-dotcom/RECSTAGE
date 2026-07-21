@@ -114,7 +114,10 @@ export default function Dashboard() {
                       Ver
                     </Link>
                     <button
-                      onClick={() => duplicateProposal(proposal.id)}
+                      onClick={async () => {
+                        const newCode = await duplicateProposal(proposal.id);
+                        if (newCode) router.push(`/admin/${newCode}`);
+                      }}
                       className="p-2.5 rounded-xl border border-neutral-700 text-neutral-400 hover:border-neutral-500 hover:text-white transition-colors"
                       title="Duplicar"
                     >

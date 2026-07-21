@@ -70,10 +70,11 @@ export function useProposals() {
   }, []);
 
   const duplicateProposal = useCallback(async (id: string) => {
+    let newCode = "";
     setProposals((prev) => {
       const original = prev.find((p) => p.id === id);
       if (!original) return prev;
-      const newCode = generateCode();
+      newCode = generateCode();
       const duplicate: Proposal = {
         ...JSON.parse(JSON.stringify(original)),
         id: String(Date.now()),
@@ -86,6 +87,7 @@ export function useProposals() {
         .upsert({ code: duplicate.code, data: duplicate }, { onConflict: "code" });
       return [...prev, duplicate];
     });
+    return newCode;
   }, []);
 
   return {
