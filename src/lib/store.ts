@@ -5,7 +5,11 @@ import { Proposal } from "./types";
 import { getSupabase } from "./supabase";
 import { getAllProposals } from "./proposals";
 
-const supabase = getSupabase();
+let _supabase: ReturnType<typeof getSupabase> | null = null;
+function supabase() {
+  if (!_supabase) _supabase = getSupabase();
+  return _supabase;
+}
 
 export function useProposals() {
   const [proposals, setProposals] = useState<Proposal[]>([]);
@@ -13,7 +17,7 @@ export function useProposals() {
 
   useEffect(() => {
     async function load() {
-      const { data, error } = await supabase
+      const { data, error } = await supabase()
         .from("proposals")
         .select("data")
         .order("created_at", { ascending: true });
@@ -24,7 +28,7 @@ export function useProposals() {
           code: p.code,
           data: p,
         }));
-        await supabase.from("proposals").upsert(rows, { onConflict: "code" });
+        await supabase().from("proposals").upsert(rows, { onConflict: "code" });
         setProposals(defaults);
       } else {
         setProposals(data.map((row) => row.data as Proposal));
@@ -43,14 +47,14 @@ export function useProposals() {
 
   const updateProposal = useCallback(async (updated: Proposal) => {
     setProposals((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
-    await supabase
+    await supabase()
       .from("proposals")
       .upsert({ code: updated.code, data: updated }, { onConflict: "code" });
   }, []);
 
   const createProposal = useCallback(async (proposal: Proposal) => {
     setProposals((prev) => [...prev, proposal]);
-    await supabase
+    await supabase()
       .from("proposals")
       .upsert({ code: proposal.code, data: proposal }, { onConflict: "code" });
   }, []);
@@ -59,7 +63,7 @@ export function useProposals() {
     setProposals((prev) => {
       const target = prev.find((p) => p.id === id);
       if (target) {
-        supabase.from("proposals").delete().eq("code", target.code);
+        supabase().from("proposals").delete().eq("code", target.code);
       }
       return prev.filter((p) => p.id !== id);
     });
@@ -77,7 +81,7 @@ export function useProposals() {
         internalName: `${original.internalName} (Copia)`,
         visible: false,
       };
-      supabase
+      supabase()
         .from("proposals")
         .upsert({ code: duplicate.code, data: duplicate }, { onConflict: "code" });
       return [...prev, duplicate];
