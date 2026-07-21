@@ -12,26 +12,36 @@ interface Props {
 
 export default function ImageUploader({ value, onChange, label, className = "" }: Props) {
   const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState("");
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function handleFile(file: File) {
-    if (!file.type.startsWith("image/")) return;
+    if (!file.type.startsWith("image/")) {
+      setError("No es una imagen");
+      return;
+    }
     setUploading(true);
+    setError("");
 
     const ext = file.name.split(".").pop() || "jpg";
     const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
 
     const supabase = getSupabase();
-    const { error } = await supabase.storage.from("images").upload(path, file, {
+    const { error: uploadError } = await supabase.storage.from("images").upload(path, file, {
       cacheControl: "3600",
       upsert: false,
+      contentType: file.type,
     });
 
-    if (!error) {
-      const { data } = supabase.storage.from("images").getPublicUrl(path);
-      onChange(data.publicUrl);
+    if (uploadError) {
+      setError(uploadError.message);
+      setUploading(false);
+      return;
     }
+
+    const { data } = supabase.storage.from("images").getPublicUrl(path);
+    onChange(data.publicUrl);
     setUploading(false);
   }
 
@@ -88,6 +98,9 @@ export default function ImageUploader({ value, onChange, label, className = "" }
             <span className="text-xs text-neutral-500">
               Arrastrá una imagen o hacé clic
             </span>
+          )}
+          {error && (
+            <span className="text-xs text-red-400 mt-1 block">{error}</span>
           )}
         </div>
       )}
